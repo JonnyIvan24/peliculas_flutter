@@ -75,4 +75,14 @@ class Pelicula {
 
   }
 
+  getPosterImg() {
+
+    if (posterPath == null){ // si no tenemos un dato para la imagen posterPath enviamos una por defecto
+      return 'https://regmedxb.com/images/team/no-image-icon.png';
+    } else{   // caso contrario mandamos la ruta de la imagen para el poster
+      return 'https://image.tmdb.org/t/p/w500/$posterPath';
+    }
+
+  }
+
 }
