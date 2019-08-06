@@ -24,8 +24,10 @@ class HomePage extends StatelessWidget {
         ),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _swiperTargetas()
+            _swiperTargetas(),
+            _footer(context)
           ],
         ),
       )
@@ -53,6 +55,27 @@ class HomePage extends StatelessWidget {
         }
         
       },
+    );
+
+  }
+
+  Widget _footer(BuildContext context) {
+
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: <Widget>[
+          Text('Populares', style: Theme.of(context).textTheme.subhead),
+          FutureBuilder(
+            future: peliculasProvider.getPopulares(),
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              // el signo de interrogación despues del data sirve para indicar si hay datos en el snapshot entonces ejecute el forEach
+              snapshot.data?.forEach((p) => print(p.title));
+              return Container();
+            },
+          ),
+        ],
+      ),
     );
 
   }
