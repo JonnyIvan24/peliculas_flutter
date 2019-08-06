@@ -62,7 +62,7 @@ class PeliculasProvider {
   }
 
   Future<List<Pelicula>> getPopulares() async {
-
+    // cada vez que se ejecute este metodo auentaremos el valor del page como aoarece en la api de las peliculas osea 1,2,3...
     _popularesPage++;
 
     final url = Uri.https(_url, '3/movie/popular', {
@@ -76,6 +76,7 @@ class PeliculasProvider {
     // añadimos toda la respuesta "lista de Pelicula" a la variable _populares
     _populares.addAll(resp);
 
+    // intoducimos la información al stream
     popularesSink(_populares);
 
     return resp;

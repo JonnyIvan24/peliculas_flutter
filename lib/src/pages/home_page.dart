@@ -11,6 +11,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    peliculasProvider.getPopulares();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Películas en cines'),
@@ -72,14 +75,22 @@ class HomePage extends StatelessWidget {
             child: Text('Populares', style: Theme.of(context).textTheme.subhead)
           ),
           SizedBox(height: 5.0,),
-          FutureBuilder(
-            future: peliculasProvider.getPopulares(),
+          // la diferencia entre un FutuereBuilder y un StreamBuilder es que el FutureBuilder solo se ejecuta una vez
+          // y el streamBuilder se puede ejecutar mas de una vez
+          StreamBuilder(
+            // en stream: ponemos la funcion para escuchar al stream
+            stream: peliculasProvider.popularesStream,
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               // el signo de interrogación despues del data sirve para indicar si hay datos en el snapshot entonces ejecute el forEach
               // snapshot.data?.forEach((p) => print(p.title));
 
               if (snapshot.hasData){
-                return MovieHorizontal(peliculas: snapshot.data,);
+                return MovieHorizontal(
+                  // mandamos la data del snapshot
+                  peliculas: snapshot.data,
+                  // mandamos la funcion a ejecutar
+                  siguientePagina: peliculasProvider.getPopulares,
+                );
               }else{
                 return Center(child: CircularProgressIndicator());
               }

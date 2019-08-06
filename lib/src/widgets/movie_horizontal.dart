@@ -5,22 +5,35 @@ class MovieHorizontal extends StatelessWidget {
 
   final List<Pelicula> peliculas;
 
-  MovieHorizontal ({@required this.peliculas});
+  final Function siguientePagina;
+
+  MovieHorizontal ({@required this.peliculas, @required this.siguientePagina});
+
+  // en el controller podemos configurar por medio de un PageController la forma de presentar las paginas
+  final _pageController = new PageController(
+    initialPage: 1,
+    viewportFraction: 0.3
+  );
 
   @override
   Widget build(BuildContext context) {
 
     final _screenSize = MediaQuery.of(context).size;
 
+    // no olvidemos que tambien podemos agregar listeners
+    _pageController.addListener( () {
+      // si llegamos cerca del final de la lista
+      if (_pageController.position.pixels >= _pageController.position.maxScrollExtent - 200){
+        // ejecutamos la funcion que mandamos por parametro desde el widget padre
+        siguientePagina();
+      }
+    });
+
     return Container(
       height: _screenSize.height * 0.25,
       // PageView sirve para mostrar datos de manera paginada
       child: PageView(
-        // en el controller podemos configurar por medio de un PageController la forma de presentar las paginas
-        controller: PageController(
-          initialPage: 1,
-          viewportFraction: 0.3,
-        ),
+        controller: _pageController,
         // en la propiedad pageSnapping se le puede quitar el efecto de imantado al momento de hacer scroll y dejar que mantenga el momentum
         pageSnapping: false,
         children: _tarjetas(context),
