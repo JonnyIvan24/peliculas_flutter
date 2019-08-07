@@ -61,7 +61,8 @@ class PeliculaDetalle extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Hero(
-            tag: pelicula.id,
+            // se cambia el id por uniqueId para evitar el fallo de Hero Animation al tener mas de un tag igual o duplicado
+            tag: pelicula.uniqueId,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
                 child: Image(

@@ -24,6 +24,12 @@ class Peliculas {
 }
 
 class Pelicula {
+  
+  // podemos agregar mas campos en caso que necesitemos datos extras
+  // en este caso es para diferenciar las peliculas de card_swiper de las de movie_horizontal
+  // esto para evitar el error que se pueda dar con el Hero Animation
+  String uniqueId;
+
   int voteCount;
   int id;
   bool video;

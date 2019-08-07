@@ -47,6 +47,9 @@ class MovieHorizontal extends StatelessWidget {
   }
 
   Widget _tarjeta(BuildContext context, Pelicula pelicula){
+    // asignamos el uniqueId concatenando el id con la palabra -poster
+    pelicula.uniqueId = '${pelicula.id}-poster';
+
     final tarjeta = Container(
         margin: EdgeInsets.only(right: 15.0),
         child: Column(
@@ -55,7 +58,7 @@ class MovieHorizontal extends StatelessWidget {
             // el child que viene siendo el widget al que se le va dar la animación, en este caso el contenedor de la imagen
             // y el tag que es el identificador unico del widget eneste caso el id de pelicula
             Hero(
-              tag: pelicula.id,
+              tag: pelicula.uniqueId,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20.0),
                 child: FadeInImage(
