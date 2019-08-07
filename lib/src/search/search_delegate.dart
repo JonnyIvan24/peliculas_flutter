@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas/src/models/pelicula_model.dart';
+import 'package:peliculas/src/providers/pelicual_provider.dart';
 
 /*
 Se ne cesita crear una clase que extienda de la clase SearchDelegate e implementar sus 4 metodos
@@ -7,6 +9,8 @@ Se ne cesita crear una clase que extienda de la clase SearchDelegate e implement
 class DataSearch extends SearchDelegate {
 
   String seleccion = '';
+  // instanciamos un objeto de la clase PeliculasProvider para hacer la busqueda de peliculas
+  final peliculasProvider = new PeliculasProvider();
 
   final peliculas = ['Spiderman', 'Avengers', 'Shazam', 'El rey leon', 'X men'];
 
@@ -56,31 +60,44 @@ class DataSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // Son las sugerencias que aparecen al ir escribiendo
+    
+      if (query.isEmpty) return Container();
 
-    // se crea una variable para asignar los valores o posibles sugerencias
-    // si esta vacio retornamos la lsta de peliculas recientes
-    // si hay info en el query hacemos la busqueda en la lista de peliculas
-    final listaSugerida = (query.isEmpty) 
-                ? peliculasRecientes 
-                : peliculas.where(
-                  (p) => p.toLowerCase().startsWith(query.toLowerCase())
-                  ).toList();
+      return FutureBuilder(
+        future: peliculasProvider.buscarPelicula(query),
+        builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
+          
+          if(snapshot.hasData){
+            
+            final peliculas = snapshot.data;
 
-    return ListView.builder(
-      itemCount: listaSugerida.length,
-      itemBuilder: (context, i) {
-        return ListTile(
-          leading: Icon(Icons.movie),
-          title: Text(listaSugerida[i]),
-          onTap: () {
-            seleccion = listaSugerida[i];
-            // showResults construye los resultados
-            showResults(context);
-          },
-        );
-      },
-    );
+            return ListView(
+              children: peliculas.map((pelicula) {
+                return ListTile(
+                  leading: FadeInImage(
+                    image: NetworkImage(pelicula.getPosterImg()),
+                    placeholder: AssetImage('assets/img/no-image.jpg'),
+                    width: 50.0,
+                    fit: BoxFit.contain,
+                  ),
+                  title: Text(pelicula.title),
+                  subtitle: Text(pelicula.originalTitle),
+                  onTap: () {
+                    close(context, null);
+                    pelicula.uniqueId = '';
+                    Navigator.pushNamed(context, 'detalle', arguments: pelicula);
+                  },
+                );
+              }).toList(),
+            );
+          }else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+
   }
 
 }
