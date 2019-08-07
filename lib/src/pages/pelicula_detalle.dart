@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas/src/models/actores_model.dart';
 import 'package:peliculas/src/models/pelicula_model.dart';
+import 'package:peliculas/src/providers/pelicual_provider.dart';
 
 class PeliculaDetalle extends StatelessWidget {
 
@@ -21,8 +23,7 @@ class PeliculaDetalle extends StatelessWidget {
                 _descripcion(pelicula),
                 _descripcion(pelicula),
                 _descripcion(pelicula),
-                _descripcion(pelicula),
-                _descripcion(pelicula),
+                _crearCasting(pelicula),
 
               ]
             ),
@@ -93,6 +94,59 @@ class PeliculaDetalle extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
       child: Text(pelicula.overview, textAlign: TextAlign.justify,),
     );
+  }
+
+  Widget _crearCasting(Pelicula pelicula){
+
+    final peliProvider = new PeliculasProvider();
+
+    return FutureBuilder(
+      future: peliProvider.getCast(pelicula.id.toString()),
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if (snapshot.hasData){
+          return _crearActoresPageView(snapshot.data);
+        }else{
+          return Center(child: CircularProgressIndicator(),);
+        }
+
+      },
+    );
+
+  }
+
+  Widget _crearActoresPageView(List<Actor> actores){
+
+    return SizedBox(
+      height: 200.0,
+      child: PageView.builder(
+        pageSnapping: false,
+        itemCount: actores.length,
+        controller: PageController(viewportFraction: 0.3, initialPage: 1),
+        itemBuilder: (contex, i) => _actorTarjeta(actores[i]),
+      ),
+    );
+
+  }
+
+  Widget _actorTarjeta(Actor actor) {
+
+    return Container(
+      padding: EdgeInsets.only(left: 20.0),
+      child: Column(
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: FadeInImage(
+              image: NetworkImage(actor.getPosterImg()),
+              placeholder: AssetImage('assets/img/no-image.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          Text(actor.name, overflow: TextOverflow.ellipsis,)
+        ],
+      ),
+    );
+
   }
 
 }
