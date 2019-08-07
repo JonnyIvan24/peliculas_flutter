@@ -51,13 +51,19 @@ class MovieHorizontal extends StatelessWidget {
         margin: EdgeInsets.only(right: 15.0),
         child: Column(
           children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: FadeInImage(
-                image: NetworkImage(pelicula.getPosterImg()),
-                placeholder: AssetImage('assets/img/no-image.jpg'),
-                fit: BoxFit.cover,
-                height: 160.0,
+            // el widget Hero es el que hace la animación Hero Animation y se necesitan dos parametros
+            // el child que viene siendo el widget al que se le va dar la animación, en este caso el contenedor de la imagen
+            // y el tag que es el identificador unico del widget eneste caso el id de pelicula
+            Hero(
+              tag: pelicula.id,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: FadeInImage(
+                  image: NetworkImage(pelicula.getPosterImg()),
+                  placeholder: AssetImage('assets/img/no-image.jpg'),
+                  fit: BoxFit.cover,
+                  height: 160.0,
+                ),
               ),
             ),
             SizedBox(height: 5.0,),
